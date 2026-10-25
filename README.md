@@ -225,9 +225,9 @@ These observations indicate that direct Mi1 stimulation influences other populat
 
 To isolate the effect of stimulation, we subtract control activity from stimulated activity:
 
-\[
-\Delta A(t)=A_{\mathrm{stimulated}}(t)-A_{\mathrm{control}}(t)
-\]
+$$
+\Delta A(t) = A_{\text{stimulated}}(t) - A_{\text{control}}(t)
+$$
 
 Maximum absolute changes in spatially averaged activity:
 
@@ -247,9 +247,9 @@ Instead of activating all Mi1 neurons simultaneously, we generate an expanding G
 
 The stimulation is defined by:
 
-\[
-S_i(t)=A\exp\left(-\frac{(d_i-r(t))^2}{2\sigma^2}\right)
-\]
+$$
+S_i(t) = A \exp\left(-\frac{(d_i-r(t))^2}{2\sigma^2}\right)
+$$
 
 where:
 
@@ -284,11 +284,11 @@ The average difference between stimulated and control activity across the select
 
 The root mean square of the differences across neurons:
 
-\[
-\mathrm{RMS}(t)=
+$$
+\mathrm{RMS}(t) =
 \sqrt{\frac{1}{N}\sum_{i=1}^{N}
-\left(A_i^{\mathrm{stimulated}}(t)-A_i^{\mathrm{control}}(t)\right)^2}
-\]
+\left(A_i^{\text{stimulated}}(t)-A_i^{\text{control}}(t)\right)^2}
+$$
 
 Unlike a signed mean, RMS captures response magnitudes without cancellation between positive and negative activity changes.
 
