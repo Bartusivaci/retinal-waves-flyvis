@@ -254,9 +254,9 @@ $$
 where:
 
 - \(A=0.5\) is the maximum stimulation amplitude.
-- \(d_i\) is the spatial distance of neuron \(i\) from the wave origin.
+- $\(d_i\$) is the spatial distance of neuron \(i\) from the wave origin.
 - \(r(t)\) is the expanding wave radius.
-- \(\sigma=1.8\) controls the wavefront width.
+- \($\sigma=1.8\$) controls the wavefront width.
 
 Stimulation begins at 0.2 seconds and continues until 0.8 seconds.
 
