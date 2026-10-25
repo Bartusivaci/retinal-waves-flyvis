@@ -160,3 +160,156 @@ python plot_stimuli.py
 ```
 
 Outputs are saved in the `results/` directory.
+
+
+## Experiment 2: Direct Internal Neural Stimulation
+
+### Objective
+
+Our initial experiments presented synthetic retinal-wave-inspired images through Flyvis' photoreceptor pathway.
+
+In this second experiment, we investigate whether **direct stimulation of internal neurons can influence downstream visual processing without presenting visual input**.
+
+This is motivated by the broader hypothesis that structured spontaneous neural activity may influence visual circuit development before normal visual experience.
+
+We investigate two stimulation conditions:
+
+1. **Uniform stimulation:** Simultaneously activate all Mi1 neurons for a short interval.
+2. **Propagating-wave stimulation:** Apply a spatially expanding Gaussian wave to Mi1 neurons.
+
+Both conditions are compared against an unstimulated control using a pretrained Flyvis network.
+
+### Experimental Setup
+
+| Parameter | Value |
+|---|---|
+| Model | `flow/0000/000` |
+| Model status | Pretrained; weights frozen |
+| Total modeled neurons | 45,669 |
+| Target population | Mi1 |
+| Stimulated Mi1 neurons | 721 |
+| Integration time step | 10 ms |
+| Observation duration | 1 second |
+| Initial-state preparation | 2 seconds of zero external stimulation |
+| Photoreceptor input | Zero external stimulation |
+| Monitored populations | Mi1, T4a, T5a |
+
+Both the stimulated and control conditions start from the same initial network state.
+
+**Important:** These experiments test neural responses, not learning. No model parameters are updated.
+
+### Experiment 2.1: Uniform Mi1 Stimulation
+
+All 721 Mi1 neurons receive a stimulation amplitude of `0.5` between 0.2 and 0.4 seconds.
+
+The unstimulated control receives zero external input throughout the simulation.
+
+#### Neural activity responses
+
+![Direct Mi1 stimulation](results/internal_stimulation.png)
+
+The figure compares average neural activity with and without stimulation.
+
+We observe that:
+
+- Mi1 activity rises immediately after stimulation begins.
+- T4a responds strongly despite receiving no direct external stimulation.
+- T5a also responds, exhibiting different temporal dynamics.
+- Activity gradually returns toward its unstimulated baseline after the input is removed.
+
+These observations indicate that direct Mi1 stimulation influences other populations through the model's internal dynamics.
+
+#### Stimulation-induced activity changes
+
+![Mi1 stimulation differences](results/internal_stimulation_difference.png)
+
+To isolate the effect of stimulation, we subtract control activity from stimulated activity:
+
+\[
+\Delta A(t)=A_{\mathrm{stimulated}}(t)-A_{\mathrm{control}}(t)
+\]
+
+Maximum absolute changes in spatially averaged activity:
+
+| Cell type | Maximum absolute activity change |
+|---|---:|
+| Mi1 | 0.4124 |
+| T4a | 0.6879 |
+| T5a | 0.2883 |
+
+T4a exhibits the largest absolute change among the three measured populations.
+
+However, activity magnitudes are not necessarily directly comparable across cell types because their response scales may differ.
+
+### Experiment 2.2: Propagating Internal Mi1 Wave
+
+Instead of activating all Mi1 neurons simultaneously, we generate an expanding Gaussian wave directly on the hexagonal Mi1 lattice.
+
+The stimulation is defined by:
+
+\[
+S_i(t)=A\exp\left(-\frac{(d_i-r(t))^2}{2\sigma^2}\right)
+\]
+
+where:
+
+- \(A=0.5\) is the maximum stimulation amplitude.
+- \(d_i\) is the spatial distance of neuron \(i\) from the wave origin.
+- \(r(t)\) is the expanding wave radius.
+- \(\sigma=1.8\) controls the wavefront width.
+
+Stimulation begins at 0.2 seconds and continues until 0.8 seconds.
+
+#### Spatial wave propagation
+
+![Internal wave snapshots](results/internal_wave_snapshots.png)
+
+Each point represents one Mi1 neuron at its hexagonal lattice position.
+
+The color indicates the amplitude of externally injected stimulation, rather than the neuron's resulting activity.
+
+Unlike the original image-based experiment, **the wave is injected directly into Mi1 neurons without using `BoxEye` or supplying visual input through photoreceptors**.
+
+#### Downstream neural responses
+
+![Internal wave responses](results/internal_wave_responses.png)
+
+We evaluate two measurements:
+
+**Mean activity change**
+
+The average difference between stimulated and control activity across the selected cell population.
+
+**RMS activity change**
+
+The root mean square of the differences across neurons:
+
+\[
+\mathrm{RMS}(t)=
+\sqrt{\frac{1}{N}\sum_{i=1}^{N}
+\left(A_i^{\mathrm{stimulated}}(t)-A_i^{\mathrm{control}}(t)\right)^2}
+\]
+
+Unlike a signed mean, RMS captures response magnitudes without cancellation between positive and negative activity changes.
+
+The results show:
+
+- **Mi1:** Clear responses during the injected wave, with sustained activity differences across the stimulation interval.
+- **T4a:** A substantial downstream response, even though T4a neurons were not directly stimulated.
+- **T5a:** A smaller but distinct response, including negative mean activity changes for much of the stimulation interval.
+- **Post-stimulation:** Activity differences decay after stimulation ends, indicating continued transient network dynamics.
+
+These findings demonstrate that structured external stimulation of an internal neural population can produce distributed responses in the pretrained Flyvis model.
+
+### Interpretation
+
+The two experiments establish that:
+
+1. Direct external stimulation can be applied to selected internal Flyvis neurons.
+2. Photoreceptor input can remain zero while the internal circuitry responds to injected activity.
+3. Stimulating Mi1 influences other neural populations, including motion-related T4a and T5a cells.
+4. Spatially structured wave stimulation produces measurable temporal changes across multiple cell types.
+
+This provides a practical foundation for investigating whether spontaneous wave-like activity can serve as a pretraining signal before visual experience.
+
+However, **these findings do not demonstrate learning, developmental organization, or improved optical-flow performance**. Those questions require training networks from scratch and comparing their subsequent visual behavior.
